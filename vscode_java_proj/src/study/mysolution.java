@@ -392,9 +392,48 @@ public class mysolution {
     // 输出
     // 0
     // 2025/6/28
-    public int buyingland(){
-        return 0;
+    public void buyingland(){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int m=sc.nextInt();
+        int[][] datmap=new int[n][m];
+        int[] rowsum=new int[n];
+        int[] colsum=new int[m];
+        for(int ii=0;ii<n;ii++){
+            for(int jj=0;jj<m;jj++){
+                datmap[ii][jj]=sc.nextInt();
+            }
+        }
+        // 行列前缀和
+        for(int ii=0,rowtemp=0;ii<n;ii++){
+            for(int jj=0;jj<m;jj++){
+                rowtemp=rowtemp+datmap[ii][jj];
+                rowsum[ii]=rowtemp;
+            }
+        }
+        for(int jj=0,coltemp=0;jj<m;jj++){
+            for(int ii=0;ii<n;ii++){
+                coltemp=coltemp+datmap[ii][jj];
+                colsum[jj]=coltemp;
+            }
+        }
+        // 遍历找最优
+        int compval=Integer.MAX_VALUE;
+        for(int ii=0;ii<n-1;ii++){
+            compval=Math.min(Math.abs(rowsum[rowsum.length-1]-rowsum[ii]-rowsum[ii]), compval);
+        }
+        for(int jj=0;jj<m-1;jj++){
+            compval=Math.min(Math.abs(colsum[colsum.length-1]-colsum[jj]-colsum[jj]), compval);
+        }
+
+        sc.close();
+        System.out.println(compval);
     }
+
+    // 代码随想录购买土地 
+    // 同样是采用前缀和的方式
+    // 2025/6/28
+    // 方法不如我，略
 
 
 

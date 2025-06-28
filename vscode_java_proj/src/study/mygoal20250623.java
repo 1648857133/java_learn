@@ -3,7 +3,7 @@ package study;
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testintersum";
+        String testnum="testbuyingland";
 
         switch (testnum) {
             case "testsearch":
@@ -18,8 +18,11 @@ public class mygoal20250623 {
             case "testgeneratematrix":
                 testgeneratematrix();// 螺旋矩阵
                 break;
-            case "testintersum":// 区间和
-                testintersum();
+            case "testintersum":
+                testintersum();// 区间和
+                break;
+            case "testbuyingland":
+                testbuyingland();// 买土地
                 break;
             default:
                 break;
@@ -68,6 +71,12 @@ public class mygoal20250623 {
         // 区间和
         mysolution test=new mysolution();
         test.intersum();
+    }
+
+    public static void testbuyingland(){
+        // 区间和
+        mysolution test=new mysolution();
+        test.buyingland();
     }
 }
 
