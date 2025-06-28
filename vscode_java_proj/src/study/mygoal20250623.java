@@ -3,20 +3,23 @@ package study;
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testgeneratematrix";
+        String testnum="testintersum";
 
         switch (testnum) {
             case "testsearch":
-                testsearch();
+                testsearch();// 二分法
                 break;
             case "testremoveelement":
-                testremoveelement();
+                testremoveelement();// 移除元素
                 break;
             case "testminsubarrayen":
-                testminsubarrayen();
+                testminsubarrayen();// 长度最小子数组
                 break;
             case "testgeneratematrix":
-                testgeneratematrix();
+                testgeneratematrix();// 螺旋矩阵
+                break;
+            case "testintersum":// 区间和
+                testintersum();
                 break;
             default:
                 break;
@@ -49,16 +52,22 @@ public class mygoal20250623 {
     }
 
     private static void testgeneratematrix(){
-        // 测试二分法
-        int n=4;
+        // 螺旋矩阵
+        int n=5;
         mysolution test=new mysolution();
-        int[][] result=test.generatematrix(n);
+        int[][] result=test.generatematrix_1(n);
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result[i].length; j++) {
                 System.out.print(result[i][j] + " ");
             }
             System.out.println(); // 换行
         }
+    }
+
+    public static void testintersum(){
+        // 区间和
+        mysolution test=new mysolution();
+        test.intersum();
     }
 }
 

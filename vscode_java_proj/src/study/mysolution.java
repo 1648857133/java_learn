@@ -1,6 +1,7 @@
 package study;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class mysolution {
     // 二分法
@@ -240,15 +241,16 @@ public class mysolution {
             jjindex=nle;
 
             // 左上
-            for(int ii=iiindex;ii>nup-1;ii--){
+            for(int ii=iiindex-1;ii>nup-1;ii--){
                 result[ii][jjindex]=count;
                 count=count+1;
             }
-            nup=nup+1;
-            iiindex=nup;
+            nle=nle+1;
+            iiindex=nle;
+            jjindex=iiindex;
             
             // 退出
-            if(count>=n*n){
+            if(count-1>=n*n){
                 break;
             }
         }
@@ -256,8 +258,143 @@ public class mysolution {
         return result;
     }
 
+    // 代码随想录螺旋矩阵
+    // 思路和我的差不多
+    // 我的思路没有进行系统化，就是先完成基础功能，遇到问题解决问题
+    // 循环不变量原则
+    // 2025/6/28
+    public int[][] generatematrix_1(int n){
+        int[][] nums=new int[n][n];
+        int startx=0,starty=0;// 每圈起始点
+        int offset=1;
+        int count=1;
+        int loop=1;
+        int i,j;
 
+        while(loop<=n/2){
+            // 顶部
+            // 左闭右开
+            for(j=starty;j<n-offset;j++){
+                nums[startx][j]=count++;
+            }
 
+            // 右列
+            // 左闭右开
+            for(i=startx;i<n-offset;i++){
+                nums[i][j]=count++;
+            }
+
+            // 下列
+            // 左闭右开
+            for(;j>starty;j--){
+                nums[i][j]=count++;
+            }
+
+            // 左列
+            for(;i>startx;i--){
+                nums[i][j]=count++;
+            }
+            startx++;
+            starty++;
+            offset++;
+            loop++;
+        }
+        if(n%2==1){
+            nums[startx][starty]=count;
+        }
+        return nums;
+    }
+
+    // 区间和
+    // 给定一个整数数组Array，计算改数组在每个指定区间内元素的总和
+    // 第一行输入为整数数组Array的长度n，接下来n行，每行一个整数，表示数组的元素，随后输入为需要计算总和的区间下标a,b（b>=a），直到文件结束
+    // 输入示例
+    // 5
+    // 1
+    // 2
+    // 3
+    // 4
+    // 5
+    // 0 1
+    // 1 3
+    // 输出示例
+    // 3
+    // 9
+    // 2025/6/28
+    public void intersum(){
+        Scanner sc=new Scanner(System.in);// 控制台读取一行
+        if(sc.hasNextLine()){
+            int n=sc.nextInt();
+            int[] nums=new int[n];
+            int[] numssum=new int[n];
+            int ii=0;
+            int sum=0;
+            while(n-->0){
+                nums[ii]=sc.nextInt();
+                sum=sum+nums[ii];
+                numssum[ii]=sum;
+                ii++;
+            }
+            while(sc.hasNextInt()){
+                int a=sc.nextInt();
+                int b=sc.nextInt();
+                System.out.println(numssum[b]-numssum[a]+nums[a]);
+            }
+        }
+        sc.close();
+    }
+
+    // 代码随想录区间和
+    // 和我的方法基本一致
+    // 2025/6/28
+    public void intersum_1(){
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int[] vec = new int[n];
+        int[] p = new int[n];
+        int presum = 0;
+        for (int i = 0; i < n; i++) {
+            vec[i] = scanner.nextInt();
+            presum += vec[i];
+            p[i] = presum;
+        }
+
+        while (scanner.hasNextInt()) {
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            int sum;
+            if (a == 0) {
+                sum = p[b];
+            } else {
+                sum = p[b] - p[a - 1];
+            }
+            System.out.println(sum);
+        }
+        scanner.close();
+    }
+
+    // 购买土地 
+    // 在一个城市区域内，被划分成了n * m个连续的区块，每个区块都拥有不同的权值，代表着其土地价值。
+    // 目前，有两家开发公司，A 公司和 B 公司，希望购买这个城市区域的土地。 
+    // 现在，需要将这个城市区域的所有区块分配给 A 公司和 B 公司。
+    // 然而，由于城市规划的限制，只允许将区域按横向或纵向划分成两个子区域，而且每个子区域都必须包含一个或多个区块。 
+    // 为了确保公平竞争，你需要找到一种分配方式，使得 A 公司和 B 公司各自的子区域内的土地总价值之差最小。 注意：区块不可再分。
+    // 输入
+    // 第一行输入两个正整数，代表 n 和 m。 
+    // 接下来的 n 行，每行输出 m 个正整数。
+    // 输出
+    // 请输出一个整数，代表两个子区域内土地总价值之间的最小差距。
+    // 输入
+    // 3 3
+    // 1 2 3
+    // 2 1 3
+    // 1 2 3
+    // 输出
+    // 0
+    // 2025/6/28
+    public int buyingland(){
+        return 0;
+    }
 
 
 
