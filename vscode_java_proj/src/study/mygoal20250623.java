@@ -3,7 +3,7 @@ package study;
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testbuyingland";
+        String testnum="testmylinkedlist_single";
 
         switch (testnum) {
             case "testsearch":
@@ -23,6 +23,12 @@ public class mygoal20250623 {
                 break;
             case "testbuyingland":
                 testbuyingland();// 买土地
+                break;
+            case "testremovelistelement":
+                testremovelistelement();// 移除链表元素
+                break;
+            case "testmylinkedlist_single":
+                testmylinkedlist_single();// 测试链表操作
                 break;
             default:
                 break;
@@ -74,10 +80,45 @@ public class mygoal20250623 {
     }
 
     public static void testbuyingland(){
-        // 区间和
+        // 开发商买土地
         mysolution test=new mysolution();
         test.buyingland();
     }
+
+    public static void testremovelistelement(){
+        // 移除链表元素
+        mysolution test=new mysolution();
+        int[] vals={1,2,1};
+        int val=1;
+        mysolution.listnode listhead=test.new listnode(vals[0]);
+        mysolution.listnode listcurrent=listhead;
+        for(int ii=1;ii<vals.length;ii++){
+            mysolution.listnode temp=test.new listnode(vals[ii]);
+            listcurrent.next=temp;
+            listcurrent=temp;
+        }
+
+        mysolution.listnode listresult=test.removelistelement(listhead,val);
+        listcurrent=listresult;
+        while (listcurrent!=null) {
+            System.out.println(listcurrent.val);
+            listcurrent=listcurrent.next;
+
+        }
+    }
+
+    public static void testmylinkedlist_single(){
+        mysolution test=new mysolution();
+        mysolution.mylinkedlist_single myLinkedList = test.new mylinkedlist_single();
+        myLinkedList.addAtHead(7);
+        myLinkedList.addAtHead(2);
+        myLinkedList.addAtHead(1);
+        myLinkedList.addAtIndex(3, 0);    
+        myLinkedList.deleteAtIndex(2);    
+        myLinkedList.printlist();
+    }
+
+    
 }
 
 

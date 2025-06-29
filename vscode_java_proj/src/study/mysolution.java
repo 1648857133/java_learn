@@ -435,7 +435,236 @@ public class mysolution {
     // 2025/6/28
     // 方法不如我，略
 
+    // 链表
+    // 2025/6/29
+    public class listnode {
+        // 节点值
+        int val;
 
+        // 前后指针
+        listnode prev;
+        listnode next;
+
+        // 构造
+        public listnode(){
+        }
+        public listnode(int valin){
+            this.val=valin;
+        }
+        public listnode(int valin,listnode nextin){
+            this.val=valin;
+            this.next=nextin;
+        }
+        public listnode(int valin,listnode nextin,listnode previn){
+            this.val=valin;
+            this.next=nextin;
+            this.prev=previn;
+        }
+    }
+
+    // 移除链表元素
+    // 给你一个链表的头节点 head 和一个整数 val ，请你删除链表中所有满足 Node.val == val 的节点，并返回新的头节点 。
+    // 输入：head = [1,2,6,3,4,5,6], val = 6
+    // 输出：[1,2,3,4,5]
+    // 2025/6/29
+    public listnode removelistelement(listnode head,int val){
+        listnode result=head;
+        listnode templn=result;
+        // 首位处理
+        while(templn!=null){
+            if(templn.val==val){
+                result=templn.next;
+                templn=result;
+            }else{
+                break;
+            }
+        }
+        while (templn!=null) {
+            if(templn.val==val){
+                result.next=templn.next;
+            }
+            templn=templn.next;
+        }
+        return result;
+    }
+
+    // 代码随想录移除链表元素
+    // 使用原来的链表操作
+    // 2025/6/29
+    public listnode removelistelement_1(listnode head,int val){
+        while(head!=null&&head.val==val){
+            head=head.next;
+        }
+        listnode curr=head;
+        while (curr!=null&&curr.next!=null) {
+            if(curr.next.val==val){
+                curr.next=curr.next.next;
+            }else{
+                curr=curr.next;
+            }
+        }
+        return head;
+    }
+
+    // 代码随想录移除链表元素
+    // 设置虚拟头结点
+    // 2025/6/29
+    public listnode removelistelement_2(listnode head,int val){
+        listnode dummy=new listnode();
+        dummy.next=head;
+        listnode curr=dummy;
+        while (curr.next!=null) {
+            if(curr.next.val==val){
+                curr.next=curr.next.next;
+            }else{
+                curr=curr.next;
+            }
+        }
+        return dummy.next;
+    }
+
+    // 代码随想录移除链表元素
+    // 递归
+    // 2025/6/29
+    public listnode removelistelement_3(listnode head,int val){
+        if(head==null){
+            return head;
+        }
+        // 假设本函数返回后面完整地已经去掉val节点的子链表
+        // 在当前递归层用当前节点接住后面的子链表
+        // 随后判断当前的node是否需要被删除，如果是，就返回
+        // 也可以先判断是否需要删除当前node,但是这样条件语句会比较不好想
+        head.next=removelistelement_3(head.next,val);
+        if(head.val==val){
+            return head.next;
+        } 
+        return head;
+        // 实际上就是怀远一个从尾部开始重新构建链表的过程
+    }
+    
+    // 设计链表
+    // 你可以选择使用单链表或者双链表，设计并实现自己的链表。
+    // 单链表中的节点应该具备两个属性：val 和 next 。val 是当前节点的值，next 是指向下一个节点的指针/引用。
+    // 如果是双向链表，则还需要属性 prev 以指示链表中的上一个节点。假设链表中的所有节点下标从 0 开始。
+    // 实现 MyLinkedList 类：
+    // MyLinkedList() 初始化 MyLinkedList 对象。
+    // int get(int index) 获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1 。
+    // void addAtHead(int val) 将一个值为 val 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点。
+    // void addAtTail(int val) 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
+    // void addAtIndex(int index, int val) 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。如果 index 等于链表的长度，那么该节点会被追加到链表的末尾。如果 index 比长度更大，该节点将 不会插入 到链表中。
+    // void deleteAtIndex(int index) 如果下标有效，则删除链表中下标为 index 的节点。
+    // 输入
+    // ["MyLinkedList", "addAtHead", "addAtTail", "addAtIndex", "get", "deleteAtIndex", "get"]
+    // [[], [1], [3], [1, 2], [1], [1], [1]]
+    // 输出
+    // [null, null, null, null, 2, null, 3]
+    // 解释
+    // MyLinkedList myLinkedList = new MyLinkedList();
+    // myLinkedList.addAtHead(1);
+    // myLinkedList.addAtTail(3);
+    // myLinkedList.addAtIndex(1, 2);    // 链表变为 1->2->3
+    // myLinkedList.get(1);              // 返回 2
+    // myLinkedList.deleteAtIndex(1);    // 现在，链表变为 1->3
+    // myLinkedList.get(1);              // 返回 3
+    // 2025/6/29
+    public class mylinkedlist_single {// 单链表
+        int val;
+        mylinkedlist_single next;
+
+        // 虚拟头结点
+        private class listnode {
+            int val;
+            listnode next;
+            listnode(int val){
+                this.val=val;
+            }
+        }
+        private listnode head;
+        private int size;
+
+        // 初始化MyLinkedList 对象
+        public mylinkedlist_single(){
+            head=new listnode(0);
+            size=0;
+        }
+
+        // 获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1 
+        public int get(int index) {
+            if(index<0||index>=size){
+                return -1;
+            }
+            listnode cur=head;
+            for(int ii=0;ii<index+1;ii++){
+                cur=cur.next;
+            }
+            return cur.val;
+        }
+
+        // 将一个值为 val 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点
+        public void addAtHead(int val){
+            listnode temp=new listnode(0);
+            temp.val=val;
+            temp.next=head.next;
+            head.next=temp;
+            size=size+1;
+        }
+
+        // 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
+        public void addAtTail(int val){
+            listnode temp=new listnode(0);
+            temp.val=val;
+            listnode cur=head;
+            for(int ii=0;ii<size;ii++){
+                cur=cur.next;
+            }
+            cur.next=temp;
+            size=size+1;
+        }
+
+        // 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。
+        // 如果 index 等于链表的长度，那么该节点会被追加到链表的末尾。
+        // 如果 index 比长度更大，该节点将 不会插入 到链表中。
+        public void addAtIndex(int index,int val){
+            if(index<0||index>size){
+                return;
+            }
+            if(index<size){
+                listnode cur=head;
+                for(int ii=0;ii<index;ii++){
+                    cur=cur.next;
+                }
+                listnode temp=new listnode(0);
+                temp.val=val;
+                temp.next=cur.next;
+                cur.next=temp;
+                size=size+1;
+            }else{
+                this.addAtTail(val);
+            }
+        }
+
+        // 如果下标有效，则删除链表中下标为 index 的节点。
+        public void deleteAtIndex(int index){
+            if(index<0||index>=size){
+                return;
+            }
+            listnode cur=head;
+            for(int ii=0;ii<index;ii++){
+                cur=cur.next;
+            }
+            cur.next=cur.next.next;
+            size=size-1;
+        }
+
+        // 输出链表
+        public void printlist(){
+            listnode cur=head;
+            for(int ii=0;ii<size;ii++){
+                cur=cur.next;
+                System.out.println(cur.val);
+            }
+        }
+    }
 
 
 
