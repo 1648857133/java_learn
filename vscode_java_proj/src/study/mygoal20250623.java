@@ -1,9 +1,11 @@
 package study;
 
+import study.mysolution.listnode;
+
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testmylinkedlist_single";
+        String testnum="testswappairs";
 
         switch (testnum) {
             case "testsearch":
@@ -29,6 +31,9 @@ public class mygoal20250623 {
                 break;
             case "testmylinkedlist_single":
                 testmylinkedlist_single();// 测试链表操作
+                break;
+            case "testswappairs":
+                testswappairs();// 测试凉凉交换链表节点
                 break;
             default:
                 break;
@@ -108,6 +113,7 @@ public class mygoal20250623 {
     }
 
     public static void testmylinkedlist_single(){
+        // 测试链表操作
         mysolution test=new mysolution();
         mysolution.mylinkedlist_single myLinkedList = test.new mylinkedlist_single();
         myLinkedList.addAtHead(7);
@@ -116,6 +122,22 @@ public class mygoal20250623 {
         myLinkedList.addAtIndex(3, 0);    
         myLinkedList.deleteAtIndex(2);    
         myLinkedList.printlist();
+    }
+
+    public static void testswappairs(){
+        // 测试两两交换链表中的节点
+        mysolution test=new mysolution();
+        mysolution.mylinkedlist_single mylinklist = test.new mylinkedlist_single();
+        mylinklist.addAtTail(1);
+        mylinklist.addAtTail(2);
+        mylinklist.addAtTail(3);
+        mylinklist.addAtTail(4);
+        mylinklist.addAtTail(5);
+        listnode resultlistnode=test.swappairs_2(mylinklist.gethead().next);
+        while(resultlistnode!=null){
+            System.err.println(resultlistnode.val);
+            resultlistnode=resultlistnode.next;
+        }
     }
 
     

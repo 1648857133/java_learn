@@ -3,6 +3,8 @@ package study;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import study.mysolution.mylinkedlist_2.ListNode;
+
 public class mysolution {
     // 二分法
     // 2025/6/25
@@ -571,14 +573,14 @@ public class mysolution {
         int val;
         mylinkedlist_single next;
 
-        // 虚拟头结点
-        private class listnode {
-            int val;
-            listnode next;
-            listnode(int val){
-                this.val=val;
-            }
-        }
+        // 虚拟头结点，外部已有定义
+        // private class listnode {
+        //     int val;
+        //     listnode next;
+        //     listnode(int val){
+        //         this.val=val;
+        //     }
+        // }
         private listnode head;
         private int size;
 
@@ -586,6 +588,11 @@ public class mysolution {
         public mylinkedlist_single(){
             head=new listnode(0);
             size=0;
+        }
+
+        // 获取头结点
+        public listnode gethead(){
+            return head;
         }
 
         // 获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1 
@@ -602,8 +609,7 @@ public class mysolution {
 
         // 将一个值为 val 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点
         public void addAtHead(int val){
-            listnode temp=new listnode(0);
-            temp.val=val;
+            listnode temp=new listnode(val);
             temp.next=head.next;
             head.next=temp;
             size=size+1;
@@ -611,8 +617,7 @@ public class mysolution {
 
         // 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
         public void addAtTail(int val){
-            listnode temp=new listnode(0);
-            temp.val=val;
+            listnode temp=new listnode(val);
             listnode cur=head;
             for(int ii=0;ii<size;ii++){
                 cur=cur.next;
@@ -666,9 +671,416 @@ public class mysolution {
         }
     }
 
+    // 双链表
+    // 2025/6/29
+    public class mylinkedlist_dou {// 双链表
+        int val;
+        mylinkedlist_dou next;
+        mylinkedlist_dou prev;
 
+        // 虚拟头结点
+        private class listnode {
+            int val;
+            listnode next;
+            listnode prev;
+            listnode(int val){
+                this.val=val;
+            }
+        }
+        private listnode head;
+        private int size;
 
+        // 初始化MyLinkedList 对象
+        public mylinkedlist_dou(){
+            head=new listnode(0);
+            size=0;
+        }
 
+        // 获取链表中下标为 index 的节点的值。如果下标无效，则返回 -1 
+        public int get(int index) {
+            if(index<0||index>=size){
+                return -1;
+            }
+            listnode cur=head;
+            for(int ii=0;ii<index+1;ii++){
+                cur=cur.next;
+            }
+            return cur.val;
+        }
+
+        // 将一个值为 val 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点
+        public void addAtHead(int val){
+            listnode temp=new listnode(0);
+            temp.val=val;
+            temp.next=head.next;
+            temp.prev=head;
+            if(temp.next!=null){
+                temp.next.prev=head;
+            }
+            size=size+1;
+        }
+
+        // 将一个值为 val 的节点追加到链表中作为链表的最后一个元素。
+        public void addAtTail(int val){
+            listnode temp=new listnode(0);
+            temp.val=val;
+            listnode cur=head;
+            for(int ii=0;ii<size;ii++){
+                cur=cur.next;
+            }
+            cur.next=temp;
+            temp.prev=cur;
+            size=size+1;
+        }
+
+        // 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。
+        // 如果 index 等于链表的长度，那么该节点会被追加到链表的末尾。
+        // 如果 index 比长度更大，该节点将 不会插入 到链表中。
+        public void addAtIndex(int index,int val){
+            if(index<0||index>size){
+                return;
+            }
+            if(index<size){
+                listnode cur=head;
+                for(int ii=0;ii<index;ii++){
+                    cur=cur.next;
+                }
+                listnode temp=new listnode(0);
+                temp.val=val;
+                temp.next=cur.next;
+                temp.prev=cur;
+                cur.next=temp;
+                if(temp.next!=null){
+                    temp.next.prev=temp;
+                }
+                size=size+1;
+            }else{
+                this.addAtTail(val);
+            }
+        }
+
+        // 如果下标有效，则删除链表中下标为 index 的节点。
+        public void deleteAtIndex(int index){
+            if(index<0||index>=size){
+                return;
+            }
+            listnode cur=head;
+            for(int ii=0;ii<index;ii++){
+                cur=cur.next;
+            }
+            cur.next=cur.next.next;
+            cur.next.prev=cur;
+            size=size-1;
+        }
+
+        // 输出链表
+        public void printlist(){
+            listnode cur=head;
+            for(int ii=0;ii<size;ii++){
+                cur=cur.next;
+                System.out.println(cur.val);
+            }
+        }
+    }
+
+    // 代码随想录单链表
+    // 2025/6/29
+    public class mylinkedlist_1{
+        private class listnode {
+            int val;
+            listnode next;
+            listnode(int val){
+                this.val=val;
+            }
+        }
+        private int size;
+        private listnode head;
+
+        // 初始化链表
+        public mylinkedlist_1(){
+            this.size=0;
+            this.head=new listnode(0);
+        }
+
+        //获取第index个节点的数值，注意index是从0开始的，第0个节点就是虚拟头结点
+        public int get(int index){
+            if(index<0||index>=size){
+                return -1;
+            }
+            listnode cur=head;
+            //第0个节点是虚拟头节点，所以查找第 index+1 个节点
+            for(int ii=0;ii<=index;ii++){
+                cur=cur.next;
+            }
+            return cur.val;
+        }
+
+        public void addathead(int val){
+            listnode newnode=new listnode(val);
+            newnode.next=head.next;
+            head.next=newnode;
+            size++;
+        }
+
+        public void addattail(int val){
+            listnode newnode=new listnode(val);
+            listnode cur=head;
+            while (cur.next!=null) {
+                cur=cur.next;
+            }
+            cur.next=newnode;
+            size++;
+        }
+
+        // 在第 index 个节点之前插入一个新节点，例如index为0，那么新插入的节点为链表的新头节点。
+        // 如果 index 等于链表的长度，则说明是新插入的节点为链表的尾结点
+        // 如果 index 大于链表的长度，则返回空
+        public void addAtIndex(int index,int val){
+            if(index<0||index>size){
+                return;
+            }
+
+            listnode pre=head;
+            for(int ii=0;ii<index;ii++){
+                pre=pre.next;
+            }
+            listnode newnode=new listnode(val);
+            newnode.next=pre.next;
+            pre.next=newnode;
+            size++;
+        }
+
+        public void deleteatindex(int index){
+            if(index<0||index>size){
+                return;
+            }
+
+            listnode pre=head;
+            for(int ii=0;ii<index;ii++){
+                pre=pre.next;
+            }
+            pre.next=pre.next.next;
+            size--;
+        }
+    }
+
+    // 代码随想录双链表
+    // 注意虚拟尾结点也是能用上的
+    // 2025/6/29
+    public class mylinkedlist_2 {
+        class ListNode{
+            int val;
+            ListNode next, prev;
+            ListNode(int val){
+                this.val = val;
+            }
+        }
+
+        // 记录链表中元素的数量
+        private int size;
+        // 记录链表的虚拟头结点和尾结点
+        private ListNode head, tail;
+        
+        public mylinkedlist_2() {
+            // 初始化操作
+            this.size = 0;
+            this.head = new ListNode(0);
+            this.tail = new ListNode(0);
+            // 这一步非常关键，否则在加入头结点的操作中会出现null.next的错误！！！
+            // 可以避免判断下一个是否存在
+            this.head.next = tail;
+            this.tail.prev = head;
+        }
+
+        public int get(int index) {
+            //判断index是否有效
+            if(index < 0 || index >= size){
+                return -1;
+            }
+            ListNode cur = head;
+            //判断是哪一边遍历时间更短
+            if(index >= size / 2){
+                //tail开始
+                cur = tail;
+                for(int i = 0; i < size - index; i++){
+                    cur = cur.prev;
+                }
+            }else{
+                for(int i = 0; i <= index; i++){
+                    cur = cur.next; 
+                }
+            }
+            return cur.val;
+        }
+
+        public void addAtHead(int val) {
+            //等价于在第0个元素前添加
+            addAtIndex(0, val);
+        }
+        
+        public void addAtTail(int val) {
+            //等价于在最后一个元素(null)前添加
+            addAtIndex(size, val);
+        }
+        
+        public void addAtIndex(int index, int val) {
+            //判断index是否有效
+            if(index < 0 || index > size){
+                return;
+            }
+
+            //找到前驱
+            ListNode pre = head;
+            for(int i = 0; i < index; i++){
+                pre = pre.next;
+            }
+            //新建结点
+            ListNode newNode = new ListNode(val);
+            newNode.next = pre.next;
+            pre.next.prev = newNode;
+            newNode.prev = pre;
+            pre.next = newNode;
+            size++;
+            
+        }
+
+        public void deleteAtIndex(int index) {
+            //判断index是否有效
+            if(index < 0 || index >= size){
+                return;
+            }
+
+            //删除操作
+            ListNode pre = head;
+            for(int i = 0; i < index; i++){
+                pre = pre.next;
+            }
+            pre.next.next.prev = pre;
+            pre.next = pre.next.next;
+            size--;
+        }
+    }
+
+    // 反转链表
+    // 输入：head = [1,2,3,4,5]
+    // 输出：[5,4,3,2,1]
+    // 2025/6/29
+    public listnode reverselist(listnode head) {
+        // 处理空链表或单节点链表
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // 递归反转剩余链表，la 是新链表的头节点
+        listnode la = reverselist(head.next);
+        // 关键：将当前节点连接到反转后链表的尾部
+        head.next.next = head; // 反转指针
+        head.next = null;      // 断开原有链接，防止成环
+        return la; // 返回新链表的头节点
+    }
+
+    // 代码随想录反转链表
+    // 双指针
+    // 2025/6/29
+    public listnode reverselist_1(listnode head){
+        listnode prev=null;
+        listnode cur=head;
+        listnode temp=null;
+        while (cur!=null) {
+            temp=cur.next;
+            cur.next=prev;
+            prev=cur;
+            cur=temp;
+        }
+        return prev;
+    }
+
+    // 递归
+    // 2025/6/29
+    public listnode reverselist_2(listnode head){
+        return reverse_recur(null,head);
+    }
+    private listnode reverse_recur(listnode prev,listnode cur){
+        if(cur==null){
+            return prev;
+        }
+        listnode temp=null;
+        temp=cur.next;
+        cur.next=prev;
+        prev=cur;
+        cur=temp;
+        return reverse_recur(cur, prev);
+    }
+
+    // 两两交换链表中的节点
+    // 给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
+    // 输入：head = [1,2,3,4]
+    // 输出：[2,1,4,3]
+    // 2025/6/30
+    public listnode swappairs(listnode head){
+        // 虚拟头结点
+        listnode prev=new listnode();
+        prev.next=head;
+        listnode cur=head;
+        listnode next=null;
+        listnode temp=null;
+        listnode start=new listnode();
+        start.next=head.next;
+        while(cur!=null && cur.next!=null){
+            next=cur.next;
+            temp=next.next;
+            next.next=cur;
+            cur.next=temp;
+            if(prev!=null){
+                prev.next=next;
+            }
+            prev=cur;
+            cur=temp;
+        }
+        head=start;
+        return head.next;
+    }
+
+    // deepseek方案，两两交换链表中的节点
+    // 仅标记要处理的节点以及前驱节点
+    // 2025/6/30
+    public listnode swappairs_1(listnode head){
+        listnode dummy=new listnode();
+        dummy.next=head;
+        listnode prev=dummy;
+        while (prev.next!=null&&prev.next.next!=null) {
+            // 获取要处理的节点
+            listnode first=prev.next;
+            listnode second=first.next;
+
+            // 交换节点
+            first.next=second.next;
+            second.next=first;
+            prev.next=second;
+
+            // 移动到下一组
+            prev=first;
+        }
+        return dummy.next;
+    }
+
+    // 代码随想录方案，两两交换链表中的节点
+    // 递归
+    // 另一个方法与上面一致
+    // 2025/6/30
+    public listnode swappairs_2(listnode head) {
+        // base case 退出提交
+        if(head==null||head.next==null){
+            return head;
+        }
+        // 获取当前节点的下一个节点
+        listnode next=head.next;
+        // 进行递归
+        listnode newnode=swappairs_2(next.next);
+        // 交换
+        next.next=head;
+        head.next=newnode;
+        return next;
+    }
 
 
 
