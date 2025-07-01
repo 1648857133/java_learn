@@ -2456,16 +2456,22 @@ public class mylinkedlist_2 {
 2. 递归
 
 
+#### 删除链表的倒数第N个节点
+快慢指针方案更加优秀
+![alt text](assets/java学习笔记/image-22.png)
 
+快指针与慢指针之间间隔N个节点，然后快慢指针同时跑，直到快指针跑到终点
 
+#### 环形链表II
 
+判断单链表是否有环
 
+通过快慢指针法，从头结点除法，fast每次移动两个节点，slow每次移动一个节点，如果fast和slow指针在图中相遇，说明这个链表有环
 
+环起始位置确定
+![alt text](assets/java学习笔记/image-23.png)
 
-
-
-
-
+![alt text](assets/java学习笔记/image-24.png)
 
 
 

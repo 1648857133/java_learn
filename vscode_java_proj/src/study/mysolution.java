@@ -3,8 +3,6 @@ package study;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import study.mysolution.mylinkedlist_2.ListNode;
-
 public class mysolution {
     // 二分法
     // 2025/6/25
@@ -1081,6 +1079,175 @@ public class mysolution {
         head.next=newnode;
         return next;
     }
+
+    // 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+    // 输入：head = [1,2,3,4,5], n = 2
+    // 输出：[1,2,3,5]
+    // 2025/7/1
+    public listnode removenthfromend(listnode head,int n){
+        // 虚拟头结点
+        listnode dummy=new listnode();
+        dummy.next=head;
+        removenthfromend_recursion(dummy,n);
+        return dummy.next;
+    }
+    private int removenthfromend_recursion(listnode head,int n){
+        if(head==null){
+            return 0;
+        }
+        int count=removenthfromend_recursion(head.next,n);
+        if (count == n) {
+            head.next = head.next.next; // 删除目标节点
+        }
+        count++;
+        return count;
+    }
+
+    // 代码随想录删除链表的倒数第 n 个结点
+    // 快慢指针
+    // 2025/7/1
+    public listnode removenthfromend_1(listnode head,int n){
+        // 虚拟头结点
+        listnode dummy=new listnode();
+        listnode fastindex=dummy;
+        listnode slowindex=dummy;
+
+        // 快慢指针相差n个节点
+        for(int ii=0;ii<=n;ii++){
+            fastindex=fastindex.next;
+        }
+
+        while ((fastindex!=null)) {
+            fastindex=fastindex.next;
+            slowindex=slowindex.next;
+        }
+
+        if(slowindex!=null){
+            slowindex.next=slowindex.next.next;
+        }
+        return dummy.next;
+    }
+
+    // 给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表没有交点，返回 null 。
+    // 输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,0,1,8,4,5], skipA = 2, skipB = 3
+    // 输出：Intersected at '8'
+    // 解释：相交节点的值为 8 （注意，如果两个链表相交则不能为 0）。
+    // 从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,0,1,8,4,5]。
+    // 在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。
+    // 2025/7/1
+    public listnode gentintersectionnode(listnode heada,listnode headb){
+        // 代码破坏了链表原本的结构，这是不被允许的
+        listnode result=new listnode();
+
+        // 翻转链表
+        listnode lastindexa=reverse_temp(heada);
+        listnode lastindexb=reverse_temp(headb);
+
+        // 从末位开始记录
+        while(lastindexa==lastindexb){
+            result=lastindexa;
+            lastindexa=lastindexa.next;
+            lastindexb=lastindexb.next;
+        }
+        return result;
+    }
+    private listnode reverse_temp(listnode head){
+        if(head==null||head.next==null){
+            return head;
+        }
+        listnode ret=reverse_temp(head.next);
+        head.next.next=head;
+        head.next=null;
+        return ret;
+    }
+
+    // deepseek方案，返回两个单链表相交的起始节点
+    // 方法很好
+    // 2025/7/1
+    public listnode gentintersectionnode_1(listnode heada,listnode headb){
+        listnode p=heada,q=headb;
+        while(p!=q){
+            p=(p==null)?headb:p.next;
+            q=(q==null)?heada:q.next;
+        }
+        return p;
+    }
+
+    // 环形链表II
+    // 给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    // 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 
+    // 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+    // 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+    // 不允许修改 链表。
+    // 输入：head = [3,2,0,-4], pos = 1
+    // 输出：返回索引为 1 的链表节点
+    // 解释：链表中有一个环，其尾部连接到第二个节点。
+    // 2025/7/1
+    public listnode detectcycle(listnode head){
+        // 没想到
+        listnode result=head;
+        return result;
+    }
+
+    // deepseek环形链表II
+    // 检测圆环是否存在用快慢指针
+    // 2025/7/1
+    public listnode detectcycle_1(listnode head){
+        if(head==null||head.next==null){
+            return null;
+        }
+
+        // 检测圆环是否存在
+        listnode fastindex=head;
+        listnode slowindex=head;
+        while (true) {
+            // 无环
+            if(fastindex==null||fastindex.next==null){
+                return null;
+            }
+
+            // 不存在
+            slowindex=slowindex.next;
+            fastindex=fastindex.next.next;
+            if(slowindex==fastindex){
+                break;// 有环
+            }
+        }
+
+        // 寻找环入口
+        listnode ptr1=head;// 起始点
+        listnode ptr2=fastindex;// 相遇点
+        while (ptr1!=ptr2) {
+            ptr1=ptr1.next;
+            ptr2=ptr2.next;
+        }
+        return ptr1;
+    }
+
+    // 代码随想录环形链表II
+    // 检测圆环是否存在用快慢指针
+    // 2025/7/1
+    public listnode detectCycle_2(listnode head) {
+        listnode slow = head;
+        listnode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {// 有环
+                listnode index1 = fast;
+                listnode index2 = head;
+                // 两个指针，从头结点和相遇结点，各走一步，直到相遇，相遇点即为环入口
+                while (index1 != index2) {
+                    index1 = index1.next;
+                    index2 = index2.next;
+                }
+                return index1;
+            }
+        }
+        return null;
+    }
+    
+    
 
 
 

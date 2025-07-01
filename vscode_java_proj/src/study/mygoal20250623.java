@@ -5,7 +5,7 @@ import study.mysolution.listnode;
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testswappairs";
+        String testnum="testremoventhfromend";
 
         switch (testnum) {
             case "testsearch":
@@ -33,7 +33,10 @@ public class mygoal20250623 {
                 testmylinkedlist_single();// 测试链表操作
                 break;
             case "testswappairs":
-                testswappairs();// 测试凉凉交换链表节点
+                testswappairs();// 测试两两交换链表节点
+                break;
+            case "testremoventhfromend":
+                testremoventhfromend();// 测试删除倒数n个节点
                 break;
             default:
                 break;
@@ -134,6 +137,21 @@ public class mygoal20250623 {
         mylinklist.addAtTail(4);
         mylinklist.addAtTail(5);
         listnode resultlistnode=test.swappairs_2(mylinklist.gethead().next);
+        while(resultlistnode!=null){
+            System.err.println(resultlistnode.val);
+            resultlistnode=resultlistnode.next;
+        }
+    }
+
+    public static void testremoventhfromend(){
+        mysolution test=new mysolution();
+        mysolution.mylinkedlist_single mylinklist = test.new mylinkedlist_single();
+        mylinklist.addAtTail(1);
+        mylinklist.addAtTail(2);
+        mylinklist.addAtTail(3);
+        mylinklist.addAtTail(4);
+        mylinklist.addAtTail(5);
+        listnode resultlistnode=test.removenthfromend(mylinklist.gethead().next,2);
         while(resultlistnode!=null){
             System.err.println(resultlistnode.val);
             resultlistnode=resultlistnode.next;
