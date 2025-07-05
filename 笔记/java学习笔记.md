@@ -2474,7 +2474,20 @@ public class mylinkedlist_2 {
 ![alt text](assets/java学习笔记/image-24.png)
 
 
+### 哈希表
+![alt text](assets/java学习笔记/image-25.png)
 
+![alt text](assets/java学习笔记/image-26.png)
+
+![alt text](assets/java学习笔记/image-27.png)
+
+当我们想使用哈希法来解决问题的时候，我们一般会选择如下三种数据结构。
+
+- 数组
+- set （集合）
+- map(映射)
+
+**当需要考虑元素是否出现过，就使用哈希法**
 
 
 

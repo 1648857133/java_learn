@@ -5,7 +5,7 @@ import study.mysolution.listnode;
 public class mygoal20250623 {
 
     public static void main(String[] args){
-        String testnum="testremoventhfromend";
+        String testnum="testtwosum";
 
         switch (testnum) {
             case "testsearch":
@@ -38,6 +38,11 @@ public class mygoal20250623 {
             case "testremoventhfromend":
                 testremoventhfromend();// 测试删除倒数n个节点
                 break;
+            case "testishappy":
+                testishappy();// 测试快乐数
+                break;
+            case "testtwosum":
+                testtwosum();// 测试两数之和
             default:
                 break;
         }
@@ -156,6 +161,25 @@ public class mygoal20250623 {
             System.err.println(resultlistnode.val);
             resultlistnode=resultlistnode.next;
         }
+    }
+
+    public static void testishappy(){
+        // 测试快乐数
+        mysolution test=new mysolution();
+        int n = 19;
+        System.out.println(test.ishappy(n));
+    }
+
+    public static void testtwosum(){
+        // 测试两数之和
+        mysolution test=new mysolution();
+        int[] nums = {3,2,3};
+        int target = 6;
+        int[] result = test.twosum(nums, target);
+        for (int i : result) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
     }
 
     

@@ -1,7 +1,17 @@
 package study;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Stack;
+// import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class mysolution {
     // 二分法
@@ -677,14 +687,14 @@ public class mysolution {
         mylinkedlist_dou prev;
 
         // 虚拟头结点
-        private class listnode {
-            int val;
-            listnode next;
-            listnode prev;
-            listnode(int val){
-                this.val=val;
-            }
-        }
+        // private class listnode {
+        //     int val;
+        //     listnode next;
+        //     listnode prev;
+        //     listnode(int val){
+        //         this.val=val;
+        //     }
+        // }
         private listnode head;
         private int size;
 
@@ -1246,7 +1256,459 @@ public class mysolution {
         }
         return null;
     }
-    
+
+    // 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的 字母异位词。
+    // 输入: s = "anagram", t = "nagaram"
+    // 输出: true
+    // 2025/7/4
+    public boolean isanagram(String s,String t){
+        int[] record=new int[26];// 记录字符出现次数
+        // s的各个元素数
+        for(int ii=0;ii<s.length();ii++){
+            record[s.charAt(ii)-'a']++;
+        }
+        // 减去t的各个元素个数
+        for(int ii=0;ii<t.length();ii++){
+            record[t.charAt(ii)-'a']--;
+        }
+        // 判断不为0情况
+        for(int count:record){
+            if(count!=0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 给定两个数组 nums1 和 nums2 ，返回 它们的 交集 。
+    // 输出结果中的每个元素一定是 唯一 的。我们可以 不考虑输出结果的顺序 。
+    // 输入：nums1 = [1,2,2,1], nums2 = [2,2]
+    // 输出：[2]
+    // 2025/7/4
+    public int[] intersection(int[] nums1,int[] nums2){
+        Stack<Integer> stackboth=new Stack<>();
+
+        // 重复元素入栈
+        for(int ii=0;ii<nums1.length;ii++){
+            for(int jj=0;jj<nums2.length;jj++){
+                if(nums1[ii]==nums2[jj]){
+                    stackboth.push(nums1[ii]);
+                }
+            }
+        }
+
+        // 栈去重
+        // 使用LinkedHashSet去重
+        Set<Integer> set = new LinkedHashSet<>();
+        set.addAll(stackboth); // 将栈中的元素添加到set中，自动去重
+        stackboth.clear(); // 清空栈
+        for (Integer num : set) {
+            stackboth.push(num); // 将set中的元素重新添加到栈中
+        }
+
+        // 栈转换成数组
+        // 使用toArray()方法转换
+        Integer[] temp = stackboth.toArray(new Integer[0]); // 注意：需要传递一个泛型数组以匹配返回的数组类型
+       
+        // 格式化输出
+        int[] result = new int[temp.length];
+        for (int i = 0; i < temp.length; i++) {
+            result[i] = temp[i];
+        }
+        return result;
+    }
+
+    // 代码随想录两个数组的交集
+    // 哈希数据结构hashset
+    // 2025/7/5
+    public int[] intersection_1(int[] nums1,int[] nums2){
+        // 空集判断
+        if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) {
+            return new int[0];
+        }
+
+        // 唯一set
+        Set<Integer> set1 = new HashSet<>();
+        Set<Integer> resSet = new HashSet<>();
+        //遍历数组1
+        for (int i : nums1) {
+            set1.add(i);
+        }
+
+        //遍历数组2的过程中判断哈希表中是否存在该元素
+        for (int i : nums2) {
+            if (set1.contains(i)) {
+                resSet.add(i);
+            }
+        }
+
+        // 格式化输出
+        return resSet.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    // 代码随想录两个数组的交集
+    // hash数组
+    // 要求知道数据长度上限
+    // ArrayList 类是一个可以动态修改的数组，与普通数组的区别就是它是没有固定大小的限制，我们可以添加或删除元素。
+    // 2025/7/5
+    public int[] javaintersection_2(int[] nums1,int[] nums2){
+        // 统计数值出现次数
+        int[] hash1 = new int[1002];
+        int[] hash2 = new int[1002];
+        for(int i : nums1)
+            hash1[i]++;
+        for(int i : nums2)
+            hash2[i]++;
+        
+        // 统计交集
+         List<Integer> resList = new ArrayList<>();
+        for(int i = 0; i < 1002; i++)
+            if(hash1[i] > 0 && hash2[i] > 0)
+                resList.add(i);
+        
+        // 转换成数组
+        int index = 0;
+        int res[] = new int[resList.size()];
+        for(int i : resList)
+            res[index++] = i;
+        return res;
+    }
+
+    // 编写一个算法来判断一个数 n 是不是快乐数。
+    // 「快乐数」 定义为：
+    // 对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
+    // 然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。
+    // 如果这个过程 结果为 1，那么这个数就是快乐数。
+    // 如果 n 是 快乐数 就返回 true ；不是，则返回 false 。
+    // 输入：n = 19
+    // 输出：true
+    // 解释：
+    // 12 + 92 = 82
+    // 82 + 22 = 68
+    // 62 + 82 = 100
+    // 12 + 02 + 02 = 1
+    // 2025/7/5
+    public boolean ishappy(int n){
+        int nin=n;
+        int count=0;
+
+        // 循环判断
+        while(true){
+            //  判断几位数
+            int M=(int)Math.log10(nin)+1;
+            int sum=0;
+            for(int ii=0;ii<M;ii++){
+                int temp=(int)Math.pow(10,ii);
+                sum=sum+(int)Math.pow(nin/temp%10,2);
+            }
+            nin=sum;
+            count++;
+            if(sum==1){
+                return true;
+            }
+
+            // 循环过多退出
+            if(count>1000){
+                return false;
+            }
+        }
+    }
+
+    // 代码随想录快乐数
+    // 哈希表
+    // 2025/7/5
+    public boolean ishappy_1(int n){
+        // 考虑数字是否出现过，就使用哈希法
+        Set<Integer> record=new HashSet<>();
+        while(n!=1&&!record.contains(n)){
+            record.add(n);
+            n=getnextnumber(n);
+        }
+        return n==1;
+    }
+    private int getnextnumber(int n){
+        int sum=0;
+        while(n>0){
+            int digit=n%10; // 获取最后一位数字
+            sum+=digit*digit; // 计算平方和
+            n/=10; // 去掉最后一位数字
+        }
+        return sum; // 返回平方和
+    }
+
+    // 两数之和
+    // 给定一个整数数组 nums 和一个整数目标值 target，
+    // 请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。
+    // 你可以假设每种输入只会对应一个答案，并且你不能使用两次相同的元素。
+    // 你可以按任意顺序返回答案。
+    // 输入：nums = [2,7,11,15], target = 9
+    // 输出：[0,1]
+    // 解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。
+    // 2025/7/5
+    public int[] twosum(int[] nums,int target){
+        // 暴力搜索
+        for(int ii=0;ii<nums.length;ii++){
+            for(int jj=0;jj<nums.length;jj++){
+                if(ii!=jj&&nums[ii]+nums[jj]==target){
+                    return new int[]{ii,jj};
+                }
+            }
+        }
+        return new int[0]; // 如果没有找到，返回空数组
+    }
+
+    // 代码随想录两数之和
+    // 哈希表
+    // 2025/7/5
+    public int[] twosum_1(int[] nums,int target){
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int ii=0;ii<nums.length;ii++){
+            // 匹配的值
+            int complement=target-nums[ii];
+            
+            // 哈希表中存在
+            if(map.containsKey(complement)){
+                return new int[]{map.get(complement),ii};
+            }
+
+            // 记录
+            map.put(nums[ii],ii);
+        }
+        return new int[0]; // 如果没有找到，返回空数组
+    }
+
+    // 代码随想录两数之和
+    // 双指针
+    // 2025/7/5
+    public int[] twosum_2(int[] nums,int target){
+        int[] result=new int[2];
+        int val1=0;
+        int val2=0;
+        // 拷贝
+        int[] copynums=Arrays.copyOf(nums, nums.length);
+
+        // 排序
+        Arrays.sort(copynums);
+
+        // 双指针搜索
+        for(int ii=0,jj=nums.length-1;ii<jj;){
+            if(copynums[ii]+copynums[jj]==target){
+                val1=copynums[ii];
+                val2=copynums[jj];
+                break;
+            }else if(copynums[ii] + copynums[jj] <target){
+                ii++;
+            }else{
+                jj--;
+            }
+        }
+
+        // 由于排序重新搜索
+        for(int ii=0;ii<nums.length;ii++){
+            if(nums[ii]==val1){
+                result[0]=ii;
+                break;
+            }
+        }
+        for(int ii=0;ii<nums.length;ii++){
+            if(nums[ii]==val2&&ii!=result[0]){
+                result[1]=ii;
+                break;
+            }
+        }
+        return result;
+    }
+
+    // 给你四个整数数组 nums1、nums2、nums3 和 nums4 
+    // 数组长度都是 n ，请你计算有多少个元组 (i, j, k, l) 能满足：
+    // 0 <= i, j, k, l < n
+    // nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+    // 输入：nums1 = [1,2], nums2 = [-2,-1], nums3 = [-1,2], nums4 = [0,2]
+    // 输出：2
+    // 解释：
+    // 两个元组如下：
+    // 1. (0, 0, 0, 1) -> nums1[0] + nums2[0] + nums3[0] + nums4[1] = 1 + (-2) + (-1) + 2 = 0
+    // 2. (1, 1, 0, 0) -> nums1[1] + nums2[1] + nums3[0] + nums4[0] = 2 + (-1) + (-1) + 0 = 0
+    // 2025/7/5
+    public int foursumcount(int[] nums1,int[] nums2,int[] nums3,int[] nums4){
+        // 暴力搜索
+        // int count=0;
+        // for(int ii=0;ii<nums1.length;ii++){
+        //     for(int jj=0;jj<nums2.length;jj++){
+        //         for(int kk=0;kk<nums3.length;kk++){
+        //             for(int ll=0;ll<nums4.length;ll++){
+        //                 if(nums1[ii]+nums2[jj]+nums3[kk]+nums4[ll]==0){
+        //                     count++;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // return count; // 返回满足条件的元组数量
+
+        // // 哈希表
+        // Map<Integer,Integer> map1=new HashMap<>();
+        // Map<Integer,Integer> map2=new HashMap<>();
+        // Map<Integer,Integer> map3=new HashMap<>();
+        // Map<Integer,Integer> map4=new HashMap<>();
+
+        // // 数组值与个数映射
+        // for(int ii=0;ii<nums1.length;ii++){
+        //     if(map1.containsKey(nums1[ii])){
+        //         map1.compute(nums1[ii],(key,val)->val+1 );
+        //     }else{
+        //         map1.put(nums1[ii], 1);
+        //     }
+        // }
+        // for(int ii=0;ii<nums2.length;ii++){
+        //     if(map2.containsKey(nums2[ii])){
+        //         map2.compute(nums2[ii],(key,val)->val+1 );
+        //     }else{
+        //         map2.put(nums2[ii], 1);
+        //     }
+        // }
+        // for(int ii=0;ii<nums3.length;ii++){
+        //     if(map3.containsKey(nums3[ii])){
+        //         map3.compute(nums3[ii],(key,val)->val+1 );
+        //     }else{
+        //         map3.put(nums3[ii], 1);
+        //     }
+        // }
+        // for(int ii=0;ii<nums4.length;ii++){
+        //     if(map4.containsKey(nums4[ii])){
+        //         map4.compute(nums4[ii],(key,val)->val+1 );
+        //     }else{
+        //         map4.put(nums4[ii], 1);
+        //     }
+        // }
+
+        // // 计数
+        // AtomicInteger count = new AtomicInteger(0);
+        // map1.forEach((key1,val1)->{
+        //     map2.forEach((key2,val2)->{
+        //         map3.forEach((key3,val3)->{
+        //             map4.forEach((key4,val4)->{
+        //                 if(key1+key2+key3+key4==0){
+        //                      count.addAndGet(val1 * val2 * val3 * val4);
+        //                 }
+        //             });
+        //         });
+        //     });
+        // });
+        // return count.get(); // 返回满足条件的元组数量
+
+        // 两两优化，O(n^2)
+        Map<Integer,Integer> mapsum12=new HashMap<>();
+        Map<Integer,Integer> mapsum34=new HashMap<>();
+        for(int ii=0;ii<nums1.length;ii++){
+            for(int jj=0;jj<nums2.length;jj++){
+                int sum=nums1[ii]+nums2[jj];
+                // 记录和的个数，如果没有则初始化为1
+                mapsum12.put(sum,mapsum12.getOrDefault(sum,0)+1);
+            }
+        }
+        for(int ii=0;ii<nums3.length;ii++){
+            for(int jj=0;jj<nums4.length;jj++){
+                int sum=nums3[ii]+nums4[jj];
+                // 记录和的个数，如果没有则初始化为1
+                mapsum34.put(sum,mapsum34.getOrDefault(sum,0)+1);
+            }
+        }
+        AtomicInteger count= new AtomicInteger(0);
+        mapsum12.forEach((key1,val1)->{
+            if(mapsum34.containsKey(-key1)){
+                // 如果存在，则计算个数
+                count.addAndGet(val1 * mapsum34.get(-key1));
+            }
+        });
+        return count.get(); // 返回满足条件的元组数量
+    }
+
+    // 代码随想录四数之和
+    // 哈希表，同样也是两两求
+    // 2025/7/5
+    public int foursumcount_1(int[] nums1,int[] nums2,int[] nums3,int[] nums4){
+        // 两两求和
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int ii=0;ii<nums1.length;ii++){
+            for(int jj=0;jj<nums2.length;jj++){
+                int sum=nums1[ii]+nums2[jj];
+                map.put(sum,map.getOrDefault(sum,0)+1);
+            }
+        }
+
+        // 计数
+        int count=0;
+        for(int ii=0;ii<nums3.length;ii++){
+            for(int jj=0;jj<nums4.length;jj++){
+                int sum=-(nums3[ii]+nums4[jj]);
+                count+=map.getOrDefault(sum,0);
+            }
+        }
+        return count;
+    }
+
+    // 救赎信
+    // 给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
+    // 如果可以，返回 true ；否则返回 false 。
+    // magazine 中的每个字符只能在 ransomNote 中使用一次。
+    // 示例 1：
+    // 输入：ransomNote = "a", magazine = "b"
+    // 输出：false
+    // 示例 2：
+    // 输入：ransomNote = "aa", magazine = "ab"
+    // 输出：false
+    // 示例 3：
+    // 输入：ransomNote = "aa", magazine = "aab"
+    // 输出：true
+    // 2025/7/5
+    public boolean canconstruct(String ransomnote,String magazine){
+        // 统计字符出现次数
+        int[] recordr=new int[26];
+        int[] recordm=new int[26];
+        for(int ii=0;ii<ransomnote.length();ii++){
+            recordr[ransomnote.charAt(ii)-'a']++;
+        }
+        for(int ii=0;ii<magazine.length();ii++){
+            recordm[magazine.charAt(ii)-'a']++;
+        }
+
+        // 减去magazine的字符出现次数
+        for(int ii=0;ii<26;ii++){
+            if(recordr[ii]>recordm[ii]){
+                return false; // 如果ransomNote的字符出现次数大于magazine，则无法构成
+            }
+        }
+        return true; // 如果所有字符都满足条件，则可以构成 
+    }
+
+    // 代码随想录救赎信
+    // 和我的方法基本一致，过
+    // 2025/7/5
+    public boolean canconstruct_1(String ransomnote,String magazine){
+        return false;
+    }
+
+    // 三数之和
+    // 给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j],
+    // nums[k]] 满足 i != j、i != k 且 j != k ，
+    // 同时还满足 nums[i] + nums[j] + nums[k] == 0 。请你返回所有和为 0 且不重复的三元组。
+    // 注意：答案中不可以包含重复的三元组。
+    // 输入：nums = [-1,0,1,2,-1,-4]
+    // 输出：[[-1,-1,2],[-1,0,1]]
+    // 解释：
+    // nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+    // nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+    // nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+    // 不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+    // 注意，输出的顺序和三元组的顺序并不重要。
+    // 2025/7/5
+    public List<List<Integer>> threesum(int[] nums){
+        
+    }
+
+
+
     
 
 
