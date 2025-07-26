@@ -2,6 +2,7 @@ package study;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -10,6 +11,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
 // import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -1704,8 +1707,487 @@ public class mysolution {
     // 注意，输出的顺序和三元组的顺序并不重要。
     // 2025/7/5
     public List<List<Integer>> threesum(int[] nums){
-        
+        // // 暴力搜索
+        // List<List<Integer>> result=new ArrayList<>();
+        // for(int ii=0;ii<nums.length;ii++){
+        //     for(int jj=ii+1;jj<nums.length;jj++){
+        //         for(int kk=jj+1;kk<nums.length;kk++){
+        //             if(nums[ii]+nums[jj]+nums[kk]==0&&ii!=jj&&ii!=kk&&jj!=kk){
+        //                 List<Integer> temp=new ArrayList<>();
+        //                 int[] sorted = {nums[ii], nums[jj], nums[kk]};
+        //                 Arrays.sort(sorted); // 排序以便去重
+        //                 temp.add(sorted[0]);
+        //                 temp.add(sorted[1]);
+        //                 temp.add(sorted[2]);
+        //                 // 去重
+        //                 if(!result.contains(temp)){
+        //                     result.add(temp);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // return result; // 返回满足条件的三元组列表
+        List<List<Integer>> result=new ArrayList<>();
+        return result;
     }
+
+    // 字符串翻转
+    // 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 s 的形式给出。
+    // 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题。
+    // 输入：s = ["h","e","l","l","o"]
+    // 输出：["o","l","l","e","h"]
+    // 2025/7/20
+    public void reverseString(char[] s){
+        int left=0;
+        int right=s.length-1;
+        while(left<right){
+            // 交换字符
+            char temp=s[left];
+            s[left]=s[right];
+            s[right]=temp;
+            left++;
+            right--;
+        }
+    }
+
+    // 字符串翻转，代码随想录
+    // 异或
+    // 2025/7/20
+    public void reverseString_1(char[] s){
+        int left=0;
+        int right=s.length-1;
+        while(left<right){
+            // 交换字符
+            s[left] ^=s[right];
+            s[right] ^=s[left];
+            s[left] ^=s[right];
+        }
+    }
+
+    // 反转字符串II
+    // 给定一个字符串 s 和一个整数 k，从字符串开头算起，每计数至 2k 个字符，就反转这 2k 字符中的前 k 个字符。
+    // 如果剩余字符少于 k 个，则将剩余字符全部反转。
+    // 如果剩余字符小于 2k 但大于或等于 k 个，则反转前 k 个字符，其余字符保持原样。
+    // 输入：s = "abcdefg", k = 2
+    // 输出："bacdfeg"
+    // 2025/7/20
+    public String reverseStr(String s, int k) {
+        char[] result=s.toCharArray(); // 将字符串转换为字符数组
+        int index=0;
+        int preindex=0;
+        for(int ii=0;ii<s.length();ii++,index++){
+            if((index+1)%(2*k)==0){
+                int left=preindex;
+                int right=preindex+k-1; // 计算反转的右边界
+                while(left<right){
+                    // 交换字符
+                    char temp=result[left];
+                    result[left]=result[right];
+                    result[right]=temp;
+                    left++;
+                    right--;
+                }
+                preindex=index+1; // 更新前一个索引
+            }
+            // 剩余字符小于k处理
+            if(s.length()-1-preindex<k){
+                int left=preindex;
+                int right=s.length()-1; // 计算反转的右边界
+                while(left<right){
+                    // 交换字符
+                    char temp=result[left];
+                    result[left]=result[right];
+                    result[right]=temp;
+                    left++;
+                    right--;
+                }
+                break; // 处理完剩余字符后退出循环
+            }
+            // 剩余字符大于k小于2k处理
+            if(s.length()-1-preindex>=k&&s.length()-1-preindex<2*k){
+                int left=preindex;
+                int right=preindex+k-1; // 计算反转的右边界
+                while(left<right){
+                    // 交换字符
+                    char temp=result[left];
+                    result[left]=result[right];
+                    result[right]=temp;
+                    left++;
+                    right--;
+                }
+                break; // 处理完剩余字符后退出循环
+            }
+            
+        }
+        return new String(result); // 返回反转后的字符串
+    }
+
+    // 反转字符串II，代码随想录
+    // 2025/7/20
+    public String reverseStr_1(String s, int k) {
+        StringBuffer res = new StringBuffer();
+        int length = s.length();
+        int start = 0;
+        while (start < length) {
+            // 找到k处和2k处
+            StringBuffer temp = new StringBuffer();
+            // 与length进行判断，如果大于length了，那就将其置为length
+            int firstK = (start + k > length) ? length : start + k;
+            int secondK = (start + (2 * k) > length) ? length : start + (2 * k);
+
+            //无论start所处位置，至少会反转一次
+            temp.append(s.substring(start, firstK));
+            res.append(temp.reverse());
+
+            // 如果firstK到secondK之间有元素，这些元素直接放入res里即可。
+            if (firstK < secondK) { //此时剩余长度一定大于k。
+                res.append(s.substring(firstK, secondK));
+            }
+            start += (2 * k);
+        }
+        return res.toString();
+    }
+
+    // 反转字符串II，代码随想录
+    // 2025/7/20
+    public String reverseStr_2(String s, int k) {
+        char[] ch = s.toCharArray();
+        for(int i = 0;i < ch.length;i += 2 * k){
+            int start = i;
+            // 判断尾数够不够k个来取决end指针的位置
+            int end = Math.min(ch.length - 1,start + k - 1);
+            while(start < end){
+                
+                char temp = ch[start];
+                ch[start] = ch[end];
+                ch[end] = temp;
+
+                start++;
+                end--;
+            }
+        }
+        return new String(ch);
+    }
+
+    // 替换数字
+    // 给定一个字符串 s，它包含小写字母和数字字符，
+    // 请编写一个函数，将字符串中的字母字符保持不变，而将每个数字字符替换为number。 
+    // 例如，对于输入字符串 "a1b2c3"，函数应该将其转换为 "anumberbnumbercnumber"。
+    // 输入描述
+    // 输入一个字符串 s,s 仅包含小写字母和数字字符。
+    // 输出描述
+    // 打印一个新的字符串，其中每个数字字符都被替换为了number
+    // 输入示例
+    // a1b2c3
+    // 输出示例
+    // anumberbnumbercnumber
+    // 2025/7/20
+    public void replaceNumberWithWord() {
+        Scanner sc=new Scanner(System.in);
+        String s = sc.nextLine(); // 读取输入字符串
+        sc.close(); // 关闭Scanner
+        StringBuffer result = new StringBuffer();
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                result.append("number");
+            } else {
+                result.append(c);
+            }
+        }
+        System.out.println(result.toString()); // 输出结果
+    }
+
+    // 替换数字，代码随想录
+    // 2025/7/20
+    public void replaceNumberWithWord_1() {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.next();
+        sc.close();
+        int len = s.length();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) >= 0 && s.charAt(i) <= '9') {
+                len += 5;
+            }
+        }
+        
+        char[] ret = new char[len];
+        for (int i = 0; i < s.length(); i++) {
+            ret[i] = s.charAt(i);
+        }
+        for (int i = s.length() - 1, j = len - 1; i >= 0; i--) {
+            if ('0' <= ret[i] && ret[i] <= '9') {
+                ret[j--] = 'r';
+                ret[j--] = 'e';
+                ret[j--] = 'b';
+                ret[j--] = 'm';
+                ret[j--] = 'u';
+                ret[j--] = 'n';
+            } else {
+                ret[j--] = ret[i];
+            }
+        }
+        System.out.println(ret);
+    }
+
+    // 反转字符串中的单词
+    // 给你一个字符串 s ，请你反转字符串中 单词 的顺序。
+    // 单词 是由非空格字符组成的字符串。s 中使用至少一个空格将字符串中的 单词 分隔开。
+    // 返回 单词 顺序颠倒且 单词 之间用单个空格连接的结果字符串。
+    // 注意：输入字符串 s中可能会存在前导空格、尾随空格或者单词间的多个空格。
+    // 返回的结果字符串中，单词间应当仅用单个空格分隔，且不包含任何额外的空格。
+    // 输入：s = "the sky is blue"
+    // 输出："blue is sky the"
+    // 2025/7/22
+    public String reverseWords(String s){
+        String[] words = s.trim().split("\\s+"); // 使用正则表达式分割单词，去除多余空格
+        StringBuffer result= new StringBuffer();
+        for (int i = words.length - 1; i >= 0; i--) {
+            result.append(words[i]); // 反向添加单词
+            if (i != 0) {
+                result.append(" "); // 添加空格，避免最后一个单词后面有空格
+            }
+        }
+        return result.toString(); // 返回反转后的字符串
+    }
+
+    // 反转字符串中的单词，代码随想录
+    // 2025/7/22
+    public String reverseWords_1(String s) {
+        // System.out.println("ReverseWords.reverseWords2() called with: s = [" + s + "]");
+        // 1.去除首尾以及中间多余空格
+        StringBuilder sb = removeSpace(s);
+        // 2.反转整个字符串
+        reverseString(sb, 0, sb.length() - 1);
+        // 3.反转各个单词
+        reverseEachWord(sb);
+        return sb.toString();
+    }
+    private StringBuilder removeSpace(String s) {
+        // System.out.println("ReverseWords.removeSpace() called with: s = [" + s + "]");
+        int start = 0;
+        int end = s.length() - 1;
+        while (s.charAt(start) == ' ') start++;
+        while (s.charAt(end) == ' ') end--;
+        StringBuilder sb = new StringBuilder();
+        while (start <= end) {
+            char c = s.charAt(start);
+            if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {
+                sb.append(c);
+            }
+            start++;
+        }
+        // System.out.println("ReverseWords.removeSpace returned: sb = [" + sb + "]");
+        return sb;
+    }
+    /**
+     * 反转字符串指定区间[start, end]的字符
+     */
+    public void reverseString(StringBuilder sb, int start, int end) {
+        while (start < end) {
+            char temp = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, temp);
+            start++;
+            end--;
+        }
+    }
+    private void reverseEachWord(StringBuilder sb) {
+        int start = 0;
+        int end = 1;
+        int n = sb.length();
+        while (start < n) {
+            while (end < n && sb.charAt(end) != ' ') {
+                end++;
+            }
+            reverseString(sb, start, end - 1);
+            start = end + 1;
+            end = start + 1;
+        }
+    }
+
+    // 右旋字符串
+    // 字符串的右旋转操作是把字符串尾部的若干个字符转移到字符串的前面。
+    // 给定一个字符串 s 和一个正整数 k，请编写一个函数，
+    // 将字符串中的后面 k 个字符移到字符串的前面，实现字符串的右旋转操作。 
+    // 例如，对于输入字符串 "abcdefg" 和整数 2，函数应该将其转换为 "fgabcde"
+    // 输入示例
+    // 2
+    // abcdefg
+    // 输出示例
+    // fgabcde
+    // 2025/7/22
+    public void rightRotateString() {
+        Scanner sc=new Scanner(System.in);
+        int k=Integer.parseInt(sc.nextLine()); // 读取右旋转的字符数
+        String s = sc.nextLine(); // 读取输入字符串
+        sc.close();
+        StringBuffer result=new StringBuffer();
+        result.append(s.substring(s.length()-k)); // 添加后面k个字符
+        result.append(s.substring(0,s.length()-k)); // 添加前面剩余的
+        System.out.println(result.toString()); // 输出结果
+    }
+
+    // 找出字符串中第一个匹配项的下标
+    // 给你两个字符串 haystack 和 needle ，
+    // 请你在 haystack 字符串中找出 needle 字符串的第一个匹配项的下标
+    // （下标从 0 开始）。如果 needle 不是 haystack 的一部分，则返回  -1 。
+    // 输入：haystack = "sadbutsad", needle = "sad"
+    // 输出：0
+    // 解释："sad" 在下标 0 和 6 处匹配。
+    // 第一个匹配项的下标是 0 ，所以返回 0 。
+    // 2025/7/22
+    public int strStr(String haystack, String needle) {
+        return haystack.indexOf(needle);
+    }
+
+    public int strStr_1(String haystack, String needle) {
+        int result=-1;
+        for(int ii=0;ii<=haystack.length()-needle.length();ii++){
+            if(needle.equals(haystack.substring(ii,ii+needle.length()))){
+                result=ii; // 返回第一个匹配项的下标
+                break;
+            }
+        }
+        return result;
+    }
+
+    // 重复的子字符串
+    // 给定一个非空字符串 s ，检查是否可以通过由它的一个子串重复多次构成。
+    // 输入: s = "abab"
+    // 输出: true
+    // 解释: 可由子串 "ab" 重复两次构成。
+    // 2025/7/25
+    public boolean repeatedSubstringPattern(String s) {
+        for(int len=1;len<s.length();len++){
+            if(s.length()%len!=0){
+                continue; // 如果长度不能被len整除，则跳过
+            }
+            String substring=s.substring(0,len); // 获取子串
+            boolean isMatch = true; // 标记是否匹配
+            for(int ii=0;ii<s.length();ii++){
+                if(s.charAt(ii) != substring.charAt(ii%len)){
+                    isMatch = false; // 如果字符不匹配，则标记为不匹配
+                    break; // 如果子串不匹配，则跳出循环
+                }
+            }
+            if(isMatch) {
+                return true; // 只有当所有字符都匹配时才返回true
+            }
+        }
+        return false; // 如果没有找到符合条件的子串，则返回false
+    }
+
+    // 用栈实现队列
+    // 2023/7/25
+    class MyQueue {
+        private Stack<Integer> stack1;
+        private Stack<Integer> stack2;
+
+        public MyQueue() {
+            stack1 = new Stack<>();
+            stack2 = new Stack<>();
+        }
+
+        public void push(int x) {
+            stack1.push(x); // 将元素压入栈1
+        }
+
+        public int pop() {
+            if (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop()); // 将栈1的元素转移到栈2
+                }
+            }
+            return stack2.pop(); // 从栈2弹出元素
+        }
+
+        public int peek() {
+            if (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop()); // 将栈1的元素转移到栈2
+                }
+            }
+            return stack2.peek(); // 返回栈2的顶部元素
+        }
+
+        public boolean empty() {
+            return stack1.isEmpty() && stack2.isEmpty(); // 检查两个栈是否都为空
+        }
+    }
+
+    // 用队列实现栈
+    // 2023/7/25
+    class MyStack {
+        private Queue<Integer> queue;
+
+        public MyStack() {
+            queue = new LinkedList<>();
+        }
+
+        public void push(int x) {
+            queue.offer(x); // 将元素添加到队列
+            for (int i = 0; i < queue.size() - 1; i++) {
+                queue.offer(queue.poll()); // 将队列的前面元素移动到队列的后面
+            }
+        }
+
+        public int pop() {
+            return queue.poll(); // 从队列中弹出元素
+        }
+
+        public int top() {
+            return queue.peek(); // 返回队列的顶部元素
+        }
+
+        public boolean empty() {
+            return queue.isEmpty(); // 检查队列是否为空
+        }
+    }
+
+    // 给出由小写字母组成的字符串 s，重复项删除操作会选择两个相邻且相同的字母，
+    // 并删除它们。
+    // 在 s 上反复执行重复项删除操作，直到无法继续删除。
+    // 在完成所有重复项删除操作后返回最终的字符串。答案保证唯一。
+    // 输入："abbaca"
+    // 输出："ca"
+    // 解释：
+    // 例如，在 "abbaca" 中，我们可以删除 "bb" 由于两字母相邻且相同，
+    // 这是此时唯一可以执行删除操作的重复项。之后我们得到字符串 "aaca"，
+    // 其中又只有 "aa" 可以执行重复项删除操作，所以最后的字符串为 "ca"。
+    // 2025/7/25
+    public String removeDuplicates(String s) {
+        StringBuffer result = new StringBuffer();
+        for (char c : s.toCharArray()) {
+            if (result.length() > 0 && result.charAt(result.length() - 1) == c) {
+                result.deleteCharAt(result.length() - 1); // 删除最后一个字符
+            } else {
+                result.append(c); // 添加当前字符
+            }
+        }
+        return result.toString(); // 返回最终的字符串
+    }
+
+    // 逆波兰表达式求值
+    // 给你一个字符串数组 tokens ，表示一个根据 逆波兰表示法 表示的算术表达式。 
+    // 请你计算该表达式。返回一个表示表达式值的整数。
+    // 注意：
+    // 有效的算符为 '+'、'-'、'*' 和 '/' 。
+    // 每个操作数（运算对象）都可以是一个整数或者另一个表达式。
+    // 两个整数之间的除法总是 向零截断 。
+    // 表达式中不含除零运算。
+    // 输入是一个根据逆波兰表示法表示的算术表达式。
+    // 答案及所有中间计算结果可以用 32 位 整数表示。
+    // 输入：tokens = ["2","1","+","3","*"]
+    // 输出：9
+    // 2025/7/25
+    
+
+
+
+
+        
+    
 
 
 
