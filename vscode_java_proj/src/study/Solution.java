@@ -1,7 +1,11 @@
 package study;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -1844,6 +1848,359 @@ public class Solution {
         }
         return next; // 返回next数组
     }
+
+    // 重复的子字符串
+    // 给定一个非空的字符串 s ，
+    // 检查是否可以通过由它的一个子串重复多次构成
+    // 输入: s = "abab"
+    // 输出: true
+    // 解释: 可由子串 "ab" 重复两次构成。
+    // 2025/8/30
+    public boolean repeatedSubstringPattern(String s) {
+        for(int len=1;len<s.length();len++){
+            if(s.length()%len==0){
+                String subString=s.substring(0, len);
+                boolean ifmatch=true;
+                for(int ii=0;ii<s.length();ii++){
+                    if(s.charAt(ii)!=subString.charAt(ii%len)){
+                        ifmatch=false;
+                        break;
+                    }
+                }
+                if(ifmatch){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // 用栈实现队列
+    // 请你仅使用两个栈实现先入先出队列。
+    // 队列应当支持一般队列支持的所有操作（push、pop、peek、empty）：
+    // 实现 MyQueue 类：
+    // void push(int x) 将元素 x 推到队列的末尾
+    // int pop() 从队列的开头移除并返回元素
+    // int peek() 返回队列开头的元素
+    // boolean empty() 如果队列为空，返回 true ；否则，返回 false
+    // 2025/8/31
+    class MyQueue {
+        Stack<Integer> stack1; // 用于入队
+        Stack<Integer> stack2; // 用于出队
+        public MyQueue() {
+            stack1 = new Stack<>(); // 初始化栈1
+            stack2 = new Stack<>(); // 初始化栈2
+        }
+        
+        public void push(int x) {
+            stack1.push(x); // 入队操作，直接将元素压入栈1
+        }
+        
+        public int pop() {
+            if(stack2.isEmpty()){ // 如果栈2为空
+                while(!stack1.isEmpty()){ // 将栈1中的元素全部弹出并压入栈2
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.pop(); // 弹出栈2的栈顶元素，即队列的头元素
+        }
+        
+        public int peek() {
+            if(stack2.isEmpty()){ // 如果栈2为空
+                while(!stack1.isEmpty()){ // 将栈1中的元素全部弹出并压入栈2
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.peek(); // 返回栈2的栈顶元素，即队列的头元素
+        }
+        
+        public boolean empty() {
+            return stack1.isEmpty()&&stack2.isEmpty(); // 如果两个栈都为空，说明队列为空
+        }
+    }
+
+    // 代码随想录，用栈实现队列
+    // 2025/8/31
+    class MyQueue_1 {
+        Stack<Integer> inStack; // 用于入队
+        Stack<Integer> outStack; // 用于出队
+        public MyQueue_1() {
+            inStack = new Stack<>(); // 初始化栈1
+            outStack = new Stack<>(); // 初始化栈2
+        }
+        
+        public void push(int x) {
+            inStack.push(x); // 入队操作，直接将元素压入栈1
+        }
+        
+        public int pop() {
+            if(outStack.isEmpty()){ // 如果栈2为空
+                while(!inStack.isEmpty()){ // 将栈1中的元素全部弹出并压入栈2
+                    outStack.push(inStack.pop());
+                }
+            }
+            return outStack.pop(); // 弹出栈2的栈顶元素，即队列的头元素
+        }
+        
+        public int peek() {
+            if(outStack.isEmpty()){ // 如果栈2为空
+                while(!inStack.isEmpty()){ // 将栈1中的元素全部弹出并压入栈2
+                    outStack.push(inStack.pop());
+                }
+            }
+            return outStack.peek(); // 返回栈2的栈顶元素，即队列的头元素
+        }
+        
+        public boolean empty() {
+            return inStack.isEmpty()&&outStack.isEmpty(); // 如果两个栈都为空，说明队列为空
+        }
+    }
+
+    // 用队列实现栈
+    // 请你仅使用两个队列实现一个后入先出（LIFO）的栈，
+    // 并支持普通栈的全部四种操作（push、top、pop 和 empty）。
+    // 实现 MyStack 类：
+    // void push(int x) 将元素 x 压入栈顶
+    // int pop() 移除并返回栈顶元素
+    // int top() 返回栈顶元素
+    // boolean empty() 如果栈为空，返回 true ；否则，返回 false
+    // 2025/8/31
+    class MyStack {
+        int size;
+        Queue<Integer> queue; // 用于存储栈元素
+        public MyStack() {
+            queue = new LinkedList<>(); // 初始化队列
+            size = 0; // 初始化栈大小
+        }
+
+        public void push(int x) {
+            queue.offer(x); // 入栈操作，直接将元素加入队列
+            size++; // 栈大小加1
+        }
+
+        public int pop() {
+            for(int ii=0;ii<size-1;ii++){ // 将队列中的前size-1个元素重新加入队列
+                queue.offer(queue.poll());
+            }
+            size--; // 栈大小减1
+            return queue.poll(); // 弹出队列的头元素，即栈顶元素
+        }
+
+        public int top() {
+            for(int ii=0;ii<size-1;ii++){ // 将队列中的前size-1个元素重新加入队列
+                queue.offer(queue.poll());
+            }
+            int result = queue.poll(); // 获取队列的头元素，即栈顶元素
+            queue.offer(result); // 将栈顶元素重新加入队列
+            return result; // 返回栈顶元素
+        }
+
+        public boolean empty() {
+            return size==0; // 如果栈大小为0，说明栈为空
+        }
+    }
+
+    // 有效的括号
+    // 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，
+    // 判断字符串是否有效。
+    // 有效字符串需满足：
+    // 左括号必须用相同类型的右括号闭合。
+    // 左括号必须以正确的顺序闭合。
+    // 输入：s = "()"
+    // 输出：true
+    // 2025/8/31
+    public boolean isValid(String s) {
+        char[] chars = s.toCharArray(); // 将字符串转换为字符数组
+        String lefts = "([{"; // 定义左括号
+        String rights = ")]}"; // 定义右括号
+        Stack<Character> stack = new Stack<>(); // 使用栈来存储左括号
+        for(char ii:chars){
+            if(ii=='('||ii=='{'||ii=='['){ // 如果是左括号，入栈
+                stack.push(ii);
+            }else{ // 如果是右括号
+                if(stack.isEmpty()){ // 如果栈为空，说明没有匹配的左括号
+                    return false; // 返回false
+                }
+                char left = stack.pop(); // 弹出栈顶元素，即最近的左括号
+                int index=rights.indexOf(ii); // 获取右括号在右括号字符串中的索引
+                if(lefts.charAt(index)!=left){ // 如果左括号和右括号不匹配
+                    return false; // 返回false
+                }
+            }
+        }
+        return stack.isEmpty(); // 如果栈为空，说明所有括号都匹配，返回true
+    }
+
+    // 代码随想录，有效的括号
+    // 2025/8/31
+    public boolean isValid_1(String s) {
+        Deque<Character> deque = new LinkedList<>();
+        char ch;
+        for (int i = 0; i < s.length(); i++) {
+            ch = s.charAt(i);
+            //碰到左括号，就把相应的右括号入栈
+            if (ch == '(') {
+                deque.push(')');
+            }else if (ch == '{') {
+                deque.push('}');
+            }else if (ch == '[') {
+                deque.push(']');
+            } else if (deque.isEmpty() || deque.peek() != ch) {
+                return false;
+            }else {//如果是右括号判断是否和栈顶元素匹配
+                deque.pop();
+            }
+        }
+        //遍历结束，如果栈为空，则括号全部匹配
+        return deque.isEmpty();
+    }
+
+    // 代码随想录，有效的括号
+    // 2025/8/31
+    public boolean isValid_2(String s) {
+        Stack<Character> stack = new Stack<>();
+        for(char c : s.toCharArray()){
+            // 有对应的另一半就直接消消乐
+            if(c == ')' && !stack.isEmpty() && stack.peek() == '(')
+                stack.pop();
+            else if(c == '}' && !stack.isEmpty() && stack.peek() == '{')
+                stack.pop();
+            else if(c == ']' && !stack.isEmpty() && stack.peek() == '[')
+                stack.pop();
+            else
+                stack.push(c);// 没有匹配的就放进去
+        }
+
+        return stack.isEmpty();
+    }
+
+    // 删除字符串中所有相邻重复项
+    // 给出由小写字母组成的字符串 s，
+    // 重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+    // 在 s 上反复执行重复项删除操作，直到无法继续删除。
+    // 在完成所有重复项删除操作后返回最终的字符串。答案保证唯一。
+    // 输入："abbaca"
+    // 输出："ca"
+    // 2025/8/31
+    public String removeDuplicates(String s) {
+        boolean ifnone=true; // 标志位，表示是否有相邻重复项
+        StringBuilder sb = new StringBuilder(s); // 使用StringBuilder来存储字符串
+        while(ifnone){
+            ifnone=false; // 假设没有相邻重复项
+            for(int ii=0;ii<sb.length()-1;ii++){
+                if(sb.charAt(ii)==sb.charAt(ii+1)){ // 如果有相邻重复项
+                    sb.delete(ii, ii+2); // 删除相邻重复项
+                    ifnone=true; // 标志位置为true，表示有相邻重复项
+                    break; // 退出循环，重新检查字符串
+                }
+            }
+        }
+        return sb.toString(); // 将结果转换为字符串并返回
+    }
+
+    // 删除字符串中所有相邻重复项，代码随想录
+    // 2025/8/31
+    public String removeDuplicates_1(String s) {
+        Stack<Character> stack = new Stack<>(); // 使用栈来存储字符
+        for(char ii:s.toCharArray()){
+            if(!stack.isEmpty()&&stack.peek()==ii){ // 如果栈不为空且栈顶元素与当前字符相同
+                stack.pop(); // 弹出栈顶元素，表示删除相邻重复项
+            }else{
+                stack.push(ii); // 否则将当前字符压入栈中
+            }
+        }
+        StringBuilder sb = new StringBuilder(); // 使用StringBuilder来存储结果
+        for(char ii:stack){
+            sb.append(ii); // 将栈中的字符依次添加到结果中
+        }
+        return sb.toString(); // 将结果转换为字符串并返回
+    }
+
+    // 逆波兰表达式求值
+    // 给你一个字符串数组 tokens ，表示一个根据 逆波兰表示法 表示的算术表达式。
+    // 请你计算该表达式。返回一个表示表达式值的整数。
+    // 输入：tokens = ["2","1","+","3","*"]
+    // 输出：9
+    // 解释：该算式转化为常见的中缀算术表达式为：((2 + 1) * 3) = 9
+    // 2025/8/31
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>(); // 使用栈来存储操作数
+        for(String ii:tokens){
+            if(ii.equals("+")||ii.equals("-")||ii.equals("*")||ii.equals("/")){ // 如果是运算符
+                int num2 = stack.pop(); // 弹出栈顶元素，作为第二个操作数
+                int num1 = stack.pop(); // 弹出栈顶元素，作为第一个操作数
+                int result=0; // 用于存储运算结果
+                switch (ii) {
+                    case "+":
+                        result = num1 + num2; // 加法
+                        break;
+                    case "-":
+                        result = num1 - num2; // 减法
+                        break;
+                    case "*":
+                        result = num1 * num2; // 乘法
+                        break;
+                    case "/":
+                        result = num1 / num2; // 除法
+                        break;
+                    default:
+                        break;
+                }
+                stack.push(result); // 将运算结果压入栈中
+            }else{ // 如果是操作数
+                stack.push(Integer.parseInt(ii)); // 将操作数转换为整数并压入栈中
+            }
+        }
+        return stack.pop(); // 返回栈顶元素，即表达式的值
+    }
+
+    // 逆波兰表达式求值，代码随想录
+    // 2025/8/31
+    public int evalRPN_1(String[] tokens) {
+        Deque<Integer> stack = new ArrayDeque<>(); // 使用双端队列来存储操作数
+        for(String s:tokens){
+            if("+".equals(s)){
+                stack.push(stack.pop()+stack.pop()); // 加法
+            }else if("-".equals(s)){
+                int num2=stack.pop(); // 弹出栈顶元素，作为第二个操作数
+                int num1=stack.pop(); // 弹出栈顶元素，作为第一个操作数
+                stack.push(num1-num2); // 减法
+            }else if("*".equals(s)){
+                stack.push(stack.pop()*stack.pop()); // 乘法
+            }else if("/".equals(s)){
+                int num2=stack.pop(); // 弹出栈顶元素，作为第二
+                int num1=stack.pop(); // 弹出栈顶元素，作为第一个操作数
+                stack.push(num1/num2); // 除法
+            }else{
+                stack.push(Integer.valueOf(s)); // 将操作数转换为整数并压入
+            }
+        }
+        return stack.pop(); // 返回栈顶元素，即表达式的值
+    }
+
+    // 滑动窗口最大值
+    // 给你一个整数数组 nums，
+    // 有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。
+    // 你只可以看到在滑动窗口内的 k 个数字。
+    // 滑动窗口每次只向右移动一位。
+    // 返回 滑动窗口中的最大值 。
+    // 输入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+    // 输出：[3,3,5,5,6,7]
+    // 2025/8/31
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] result = new int[nums.length - k + 1]; // 用于存储结果
+        for(int ii=0;ii<=nums.length-k;ii++){
+            int max = nums[ii]; // 初始化最大值为窗口的第一个元素
+            for(int jj=ii;jj<ii+k;jj++){
+                if(nums[jj]>max){ // 如果当前元素大于最大值
+                    max = nums[jj]; // 更新最大值
+                }
+            }
+            result[ii] = max; // 将当前窗口的最大值存储到结果中
+        }
+        return result; // 返回结果
+    }
+
 
 
 
